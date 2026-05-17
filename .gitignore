@@ -1,0 +1,5 @@
+__pycache__
+venv
+.env
+gallery_guide.db
+artworks
