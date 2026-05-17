@@ -7,13 +7,14 @@ import os
 from dotenv import load_dotenv
 from fastembed import SparseTextEmbedding, TextEmbedding
 from qdrant_client import QdrantClient
-from qdrant_client.models import (
-    Fusion,
-    FusionQuery,
-    Prefetch,
-    SparseVector,
-)
-
+# from qdrant_client.models import (
+#     Fusion,
+#     FusionQuery,
+#     Prefetch,
+#     SparseVector,
+# )
+from qdrant_client.models import SparseVector
+from qdrant_client import models as qmodels
 load_dotenv()
 
 COLLECTION   = "gallery_guide"
@@ -53,13 +54,23 @@ class RAGEngine:
             dense_vec  = self._embed_dense(query)
             sparse_vec = self._embed_sparse(query)
 
+            # results = self.client.query_points(
+            #     collection_name=COLLECTION,
+            #     prefetch=[
+            #         Prefetch(query=dense_vec,  using="dense",  limit=12),
+            #         Prefetch(query=sparse_vec, using="sparse", limit=12),
+            #     ],
+            #     query=FusionQuery(fusion=Fusion.RRF),
+            #     limit=limit,
+            #     with_payload=True,
+            # )
             results = self.client.query_points(
                 collection_name=COLLECTION,
                 prefetch=[
-                    Prefetch(query=dense_vec,  using="dense",  limit=12),
-                    Prefetch(query=sparse_vec, using="sparse", limit=12),
+                    qmodels.Prefetch(query=dense_vec,  using="dense",  limit=12),
+                    qmodels.Prefetch(query=sparse_vec, using="sparse", limit=12),
                 ],
-                query=FusionQuery(fusion=Fusion.RRF),
+                query=qmodels.FusionQuery(fusion=qmodels.Fusion.RRF),
                 limit=limit,
                 with_payload=True,
             )
