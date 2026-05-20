@@ -53,6 +53,7 @@ app.add_middleware(
 )
 
 
+
 # ── Helpers ───────────────────────────────────────────────────────────
 
 def build_context(results: list[dict]) -> str:
